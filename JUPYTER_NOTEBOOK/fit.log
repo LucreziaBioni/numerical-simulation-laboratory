@@ -1,0 +1,576 @@
+
+
+*******************************************************************************
+Wed Mar  2 16:16:12 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [0.00000 : 3.14159]
+        #datapoints = 13
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 0.0000000000e+00  nan        0.00e+00    1.000000e+00   1.000000e+01   4.000000e+01
+BREAK: Singular matrix in Givens()
+
+*******************************************************************************
+Wed Mar  2 16:16:22 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [0.00000 : 3.14159]
+        #datapoints = 13
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 0.0000000000e+00  nan        0.00e+00    1.000000e-01   1.000000e+01   4.000000e+01
+BREAK: Singular matrix in Givens()
+
+*******************************************************************************
+Wed Mar  2 16:16:28 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [0.00000 : 3.14159]
+        #datapoints = 13
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 0.0000000000e+00  nan        0.00e+00    1.000000e-02   1.000000e+01   4.000000e+01
+BREAK: Singular matrix in Givens()
+
+*******************************************************************************
+Wed Mar  2 16:16:50 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [0.00000 : 3.14159]
+        #datapoints = 13
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 0.0000000000e+00  nan        0.00e+00    1.000000e-02   1.000000e+01   4.000000e+01
+BREAK: Singular matrix in Givens()
+
+*******************************************************************************
+Wed Mar  2 16:17:16 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 60.0000]
+        #datapoints = 120
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.2936377577e-03   0.00e+00  8.42e-02    1.000000e-02   1.000000e+01   4.000000e+01
+BREAK: w = 0 in Givens();  Cjj = -3.37048e-223,  Cij = 5.34563e-208
+
+*******************************************************************************
+Wed Mar  2 16:17:34 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 60.0000]
+        #datapoints = 120
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.2936377577e-03   0.00e+00  8.42e-02    1.000000e-02   1.000000e+01   4.000000e+01
+BREAK: w = 0 in Givens();  Cjj = -3.37048e-223,  Cij = 5.34563e-208
+
+*******************************************************************************
+Wed Mar  2 16:17:37 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 60.0000]
+        #datapoints = 120
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.2936377577e-03   0.00e+00  8.42e-02    1.000000e-02   1.000000e+01   4.000000e+01
+BREAK: w = 0 in Givens();  Cjj = -3.37048e-223,  Cij = 5.34563e-208
+
+*******************************************************************************
+Wed Mar  2 16:17:40 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [20.0000 : 60.0000]
+        #datapoints = 160
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.3080528735e-03   0.00e+00  7.29e-02    1.000000e-02   1.000000e+01   4.000000e+01
+BREAK: w = 0 in Givens();  Cjj = -3.37048e-223,  Cij = 5.34563e-208
+
+*******************************************************************************
+Wed Mar  2 16:17:56 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [20.0000 : 60.0000]
+        #datapoints = 160
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.3566571139e-03   0.00e+00  8.35e-02    1.000000e-02   1.500000e+01   4.000000e+01
+BREAK: w = 0 in Givens();  Cjj = -1.06765e-273,  Cij = 4.43966e-258
+
+*******************************************************************************
+Wed Mar  2 16:18:00 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [20.0000 : 60.0000]
+        #datapoints = 160
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 1.1715708189e-02   0.00e+00  8.35e-01    1.000000e-01   1.500000e+01   4.000000e+01
+BREAK: w = 0 in Givens();  Cjj = -1.5818e-260,  Cij = 5.76767e-245
+
+*******************************************************************************
+Wed Mar  2 16:18:16 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [20.0000 : 60.0000]
+        #datapoints = 160
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 1.5084119823e-02   0.00e+00  6.29e-01    1.000000e-01   1.500000e+01   3.000000e+01
+BREAK: w = 0 in Givens();  Cjj = -5.21625e-308,  Cij = 1.84311e-292
+
+*******************************************************************************
+Wed Mar  2 16:19:26 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 8.7978758125e-03   0.00e+00  5.46e-01    1.000000e-01   1.500000e+01   3.000000e+01
+
+Current data point
+=========================
+#               = 1 out of 100
+x               = -0.152153      
+z               = 0.000966777    
+
+Current set of parameters
+=========================
+a               = -0.152153      
+b               = -119.269       
+c               = 26.9884        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Wed Mar  2 16:19:37 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 8.7978758125e-03   0.00e+00  5.46e-01    1.000000e-01   1.500000e+01   3.000000e+01
+
+Current data point
+=========================
+#               = 1 out of 100
+x               = -0.152153      
+z               = 0.000966777    
+
+Current set of parameters
+=========================
+a               = -0.152153      
+b               = -119.269       
+c               = 26.9884        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Wed Mar  2 16:20:48 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 8.7978758125e-03   0.00e+00  5.46e-01    1.000000e-01   1.500000e+01   3.000000e+01
+
+Current data point
+=========================
+#               = 1 out of 100
+x               = -0.152153      
+z               = 0.000966777    
+
+Current set of parameters
+=========================
+a               = -0.152153      
+b               = -119.269       
+c               = 26.9884        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Wed Mar  2 16:21:33 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 7.8075112810e-03   0.00e+00  6.25e-01    1.000000e-01   2.000000e+01   3.000000e+01
+
+Current data point
+=========================
+#               = 9 out of 100
+x               = -0.0608445     
+z               = 0.00105946     
+
+Current set of parameters
+=========================
+a               = -0.0608445     
+b               = -71.1898       
+c               = 28.8133        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Wed Mar  2 16:22:20 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.5741276197e-03   0.00e+00  0.00e+00    1.000000e+00   1.000000e+00   1.000000e+00
+BREAK: Singular matrix in Givens()
+
+*******************************************************************************
+Wed Mar  2 16:22:29 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.5741276197e-03   0.00e+00  0.00e+00    1.000000e-01   1.000000e+00   1.000000e+00
+BREAK: Singular matrix in Givens()
+
+*******************************************************************************
+Wed Mar  2 16:22:43 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.6874854779e-02   0.00e+00  2.74e-01    1.000000e-01   1.000000e+00   3.000000e+01
+  90 1.0826449861e-04  -1.47e-01  2.74e-10    8.513920e-03   2.168647e-02   4.082711e+01
+
+After 90 iterations the fit converged.
+final sum of squares of residuals : 0.000108264
+rel. change during last iteration : -1.47114e-06
+
+degrees of freedom    (FIT_NDF)                        : 97
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00105647
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.11613e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00851392       +/- 0.0002231    (2.62%)
+b               = 0.0216865        +/- 0.001338     (6.169%)
+c               = 40.8271          +/- 0.1451       (0.3554%)
+
+correlation matrix of the fit parameters:
+                a      b      c      
+a               1.000 
+b               0.584  1.000 
+c               0.014  0.023  1.000 
+
+
+*******************************************************************************
+Wed Mar  2 16:23:20 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.6874854779e-02   0.00e+00  2.74e-01    1.000000e-01   1.000000e+00   3.000000e+01
+  90 1.0826449861e-04  -1.47e-01  2.74e-10    8.513920e-03   2.168647e-02   4.082711e+01
+
+After 90 iterations the fit converged.
+final sum of squares of residuals : 0.000108264
+rel. change during last iteration : -1.47114e-06
+
+degrees of freedom    (FIT_NDF)                        : 97
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00105647
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.11613e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00851392       +/- 0.0002231    (2.62%)
+b               = 0.0216865        +/- 0.001338     (6.169%)
+c               = 40.8271          +/- 0.1451       (0.3554%)
+
+correlation matrix of the fit parameters:
+                a      b      c      
+a               1.000 
+b               0.584  1.000 
+c               0.014  0.023  1.000 
+
+
+*******************************************************************************
+Wed Mar  2 16:23:52 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.6874854779e-02   0.00e+00  2.74e-01    1.000000e-01   1.000000e+00   3.000000e+01
+  90 1.0826449861e-04  -1.47e-01  2.74e-10    8.513920e-03   2.168647e-02   4.082711e+01
+
+After 90 iterations the fit converged.
+final sum of squares of residuals : 0.000108264
+rel. change during last iteration : -1.47114e-06
+
+degrees of freedom    (FIT_NDF)                        : 97
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00105647
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.11613e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00851392       +/- 0.0002231    (2.62%)
+b               = 0.0216865        +/- 0.001338     (6.169%)
+c               = 40.8271          +/- 0.1451       (0.3554%)
+
+correlation matrix of the fit parameters:
+                a      b      c      
+a               1.000 
+b               0.584  1.000 
+c               0.014  0.023  1.000 
+
+
+*******************************************************************************
+Wed Mar  2 16:24:36 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 7.8365623260e-02   0.00e+00  1.55e-01    1.000000e-01   1.000000e-01   3.000000e+01
+
+Current data point
+=========================
+#               = 83 out of 100
+x               = 0.0142897      
+z               = 0.00192254     
+
+Current set of parameters
+=========================
+a               = 0.0142897      
+b               = -0.393946      
+c               = 7.98358        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Wed Mar  2 16:26:03 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 7.8365623260e-02   0.00e+00  1.55e-01    1.000000e-01   1.000000e-01   3.000000e+01
+
+Current data point
+=========================
+#               = 83 out of 100
+x               = 0.0142897      
+z               = 0.00192254     
+
+Current set of parameters
+=========================
+a               = 0.0142897      
+b               = -0.393946      
+c               = 7.98358        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Wed Mar  2 16:26:22 2022
+
+
+FIT:    data read from 'Data/spectrum.dat'
+        format = z
+        x range restricted to [30.0000 : 55.0000]
+        #datapoints = 100
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*exp(-b*(x-c)**2)
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             c            
+   0 2.6874854779e-02   0.00e+00  2.74e-01    1.000000e-01   1.000000e+00   3.000000e+01
+  90 1.0826449861e-04  -1.47e-01  2.74e-10    8.513920e-03   2.168647e-02   4.082711e+01
+
+After 90 iterations the fit converged.
+final sum of squares of residuals : 0.000108264
+rel. change during last iteration : -1.47114e-06
+
+degrees of freedom    (FIT_NDF)                        : 97
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00105647
+variance of residuals (reduced chisquare) = WSSR/ndf   : 1.11613e-06
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 0.00851392       +/- 0.0002231    (2.62%)
+b               = 0.0216865        +/- 0.001338     (6.169%)
+c               = 40.8271          +/- 0.1451       (0.3554%)
+
+correlation matrix of the fit parameters:
+                a      b      c      
+a               1.000 
+b               0.584  1.000 
+c               0.014  0.023  1.000 

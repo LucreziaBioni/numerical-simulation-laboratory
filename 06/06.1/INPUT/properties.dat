@@ -1,0 +1,30 @@
+TOTAL_ENERGY
+MAGNETIZATION
+SPECIFIC_HEAT
+SUSCEPTIBILITY
+ 
+ENDPROPERTIES
+
+/////////////////////////////////////
+
+Possible properties:
+
+LJ Molecular Dynamics or Monte Carlo:
+
+TOTAL_ENERGY
+POTENTIAL_ENERGY
+KINETIC_ENERGY
+TEMPERATURE
+PRESSURE
+GOFR              100
+
+Only LJ Molecular Dynamics:
+
+POFV              30
+
+Ising 1D MRT^2 or Gibbs:
+
+TOTAL_ENERGY
+MAGNETIZATION
+SPECIFIC_HEAT
+SUSCEPTIBILITY
