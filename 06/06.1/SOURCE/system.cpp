@@ -1,7 +1,7 @@
 /****************************************************************
 *****************************************************************
     _/    _/  _/_/_/  _/       Numerical Simulation Laboratory
-   _/_/  _/ _/       _/       Physics Department
+   _/_/  _/ _/       _/       Physics Department.
   _/  _/_/    _/    _/       Universita' degli Studi di Milano
  _/    _/       _/ _/       Prof. D.E. Galli
 _/    _/  _/_/_/  _/_/_/_/ email: Davide.Galli@unimi.it
@@ -231,7 +231,7 @@ void System :: initialize_velocities(){
   double xold, yold, zold;
   if(_restart){
     ifstream cinf;
-    cinf.open("../../04.2_NSL_SIMULATOR/OUTPUT/CONFIG/conf-1.xyz");
+    cinf.open("../INPUT/CONFIG/conf-1.xyz");
     if(cinf.is_open()){
       string comment;
       string particle;
@@ -248,33 +248,6 @@ void System :: initialize_velocities(){
         _particle(i).setpositold(1, this->pbc(_side(1)*yold, 1));
         _particle(i).setpositold(2, this->pbc(_side(2)*zold, 2));
 
-        // per l'ESERCIZIO 4.3 leggo le posizioni della particella dal fine config.xyz
-        // questo codice è inutile e, se anche servisse, non qui, ma in read configuration
-        /* std::ifstream infile("../../04.2_NSL_SIMULATOR/OUTPUT/CONFIG/config.xyz");
-        std::string line;
-        std::vector<std::vector<double>> pos;
-        int line_num = 0;
-
-        while (std::getline(infile, line)) {
-            if (line_num < 2) {  // salta le prime due righe
-                line_num++;
-                continue;
-            }
-            std::istringstream iss(line);
-            std::string dummy;
-            double x, y, z;
-            iss >> dummy >> x >> y >> z;  // Salta la prima colonna
-            pos.push_back({x, y, z});
-            line_num++;
-        }
-        //'pos' contiene le coordinate lette dal file config_800.xyz
-        double x = pos[i + 2][1];  // Colonna 1
-        double y = pos[i + 2][2];  // Colonna 2
-        double z = pos[i + 2][3];  // Colonna 3
-
-        _particle(i).setpositold(0, this->pbc(x, 0));
-        _particle(i).setpositold(1, this->pbc(y, 1));
-        _particle(i).setpositold(2, this->pbc(z, 2)); */
 
       }
     } else cerr << "PROBLEM: Unable to open INPUT file conf-1.xyz"<< endl;
@@ -287,15 +260,6 @@ void System :: initialize_velocities(){
       vx(i) = _rnd.Gauss(0.,sqrt(_temp));
       vy(i) = _rnd.Gauss(0.,sqrt(_temp));
       vz(i) = _rnd.Gauss(0.,sqrt(_temp));
-
-      
-      //double v = sqrt(3 * _temp);
-      //if(i%6 == 0){vx(i) = v; vy(i) = 0.0; vz(i) = 0.0;} 
-      //else if(i%6 == 1){vx(i) = -v; vy(i) = 0.0; vz(i) = 0.0;} 
-      //else if(i%6 == 2){vx(i) = 0.0; vy(i) = v; vz(i) = 0.0;} 
-      //else if(i%6 == 3){vx(i) = 0.0; vy(i) = -v; vz(i) = 0.0;} 
-      //else if(i%6 == 4){vx(i) = 0.0; vy(i) = 0.0; vz(i) = v;} 
-      //else {vx(i) = 0.0; vy(i) = 0.0; vz(i) = -v;}
         
       sumv(0) += vx(i);
       sumv(1) += vy(i);
@@ -648,12 +612,19 @@ void System :: measure(){ // Measure properties
   if (_measure_pressure) _measurement[_index_pressure] = _rho * (2.0/3.0) * kenergy_temp + (_ptail*_npart + 48.0*virial/3.0)/_volume;
   // MAGNETIZATION /////////////////////////////////////////////////////////////
 // TO BE FIXED IN EXERCISE 6
+  if (_measure_magnet){
+    for (int i=0; i<_npart; i++){
+      magnetization += _particle(i).getspin();
+    }
+    magnetization /= double(_npart);
+    _measurement(_index_magnet) = magnetization;
+  }
   // SPECIFIC HEAT /////////////////////////////////////////////////////////////
 // TO BE FIXED IN EXERCISE 6
-  if (_measure_cv and _measure_tenergy) {
-
-    
-  }
+  //if (_measure_cv and _measure_tenergy) {
+//
+  //  
+  //}
   // SUSCEPTIBILITY ////////////////////////////////////////////////////////////
 // TO BE FIXED IN EXERCISE 6
 
@@ -763,10 +734,10 @@ void System :: averages(int blk){
   // TO BE FIXED IN EXERCISE 6
   // SPECIFIC HEAT /////////////////////////////////////////////////////////////
   // TO BE FIXED IN EXERCISE 6
-  if(_measure_cv){
-    _global_av(_index_cv) -= _average(_index_cv);
-    _global_av2(_index_cv) -= _average(_index_cv) * _average(_index_cv);
-  }
+  //if(_measure_cv){
+  //  _global_av(_index_cv) -= _average(_index_cv);
+  //  _global_av2(_index_cv) -= _average(_index_cv) * _average(_index_cv);
+  //}
   // SUSCEPTIBILITY ////////////////////////////////////////////////////////////
   // TO BE FIXED IN EXERCISE 6
   // ACCEPTANCE ////////////////////////////////////////////////////////////////
