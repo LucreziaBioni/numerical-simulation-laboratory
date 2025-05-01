@@ -559,7 +559,11 @@ void System :: measure(){ // Measure properties
         distance(1) = this->pbc( _particle(i).getposition(1,true) - _particle(j).getposition(1,true), 1);
         distance(2) = this->pbc( _particle(i).getposition(2,true) - _particle(j).getposition(2,true), 2);
         dr = sqrt( dot(distance,distance) );
-        // GOFR ... TO BE FIXED IN EXERCISE 7
+        // GOFR ... FIXED IN EXERCISE 7
+        bin = ceil(dr/_bin_size); // capisco in quale bin rientra la distanza, approssimo per eccesso
+          if(bin < _n_bins) {
+            _measurement(_index_gofr + bin) += 2.0 / (_npart * _rho * ( (4*M_PI/3) * ( pow(bin * _bin_size, 3) - pow( (bin-1) * _bin_size , 3 ) ) ) ) ; // incremento il contatore del bin e lo normalizzo
+          }
         if(dr < _r_cut){
           if(_measure_penergy)  penergy_temp += 1.0/pow(dr,12) - 1.0/pow(dr,6); // POTENTIAL ENERGY
           if(_measure_pressure) virial       += 1.0/pow(dr,12) - 0.5/pow(dr,6); // PRESSURE
@@ -640,7 +644,7 @@ void System :: measure(){ // Measure properties
 
 void System :: averages(int blk){
 
-  ofstream coutf;
+  ofstream coutf, coutf2;
   double average, sum_average, sum_ave2;
 
   _average     = _block_av / double(_nsteps);
@@ -709,6 +713,20 @@ void System :: averages(int blk){
   }
   // GOFR //////////////////////////////////////////////////////////////////////
   // TO BE FIXED IN EXERCISE 7
+  if(_measure_gofr){
+    coutf.open("../OUTPUT/gofr.dat",ios::app);
+    coutf2.open("../OUTPUT/gofr_final.dat",ios::app);
+    for(int i=0; i<_n_bins; i++){
+      average  = _average(_index_gofr + i);
+      sum_average = _global_av(_index_gofr + i);
+      sum_ave2 = _global_av2(_index_gofr + i);
+      coutf << setw(12) << (i+0.5)*_bin_size
+            << setw(12) << average; // stampa la media istantanea del blocco
+      coutf2 << setw(12) << sum_average/double(blk)
+            << setw(12) << this->error(sum_average, sum_ave2, blk) << endl;
+    }
+    coutf.close();
+  }
 
 
   // POFV //////////////////////////////////////////////////////////////////////
