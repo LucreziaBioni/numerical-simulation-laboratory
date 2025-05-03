@@ -320,7 +320,7 @@ void System :: initialize_properties(){ // Initialize data members used for meas
         _index_penergy = index_property;
         _measure_penergy = true;
         index_property++;
-        _vtail = (8. * M_PI * _rho) / (9. * pow(_r_cut, 9)) - (8. * M_PI * _rho) / (3. * pow(_r_cut, 3)) ; // FIXED IN EXERCISE 7
+        _vtail =  (8. * M_PI * _rho) / (9. * pow(_r_cut, 9)) - (8. * M_PI * _rho) / (3. * pow(_r_cut, 3))  ; // FIXED IN EXERCISE 7
       } else if( property == "KINETIC_ENERGY" ){
         ofstream coutk("../OUTPUT/kinetic_energy.dat");
         coutk << "#     BLOCK:   ACTUAL_KE:    KE_AVE:      ERROR:" << endl;
@@ -561,6 +561,9 @@ void System :: measure(){ // Measure properties
         dr = sqrt( dot(distance,distance) );
         // GOFR ... FIXED IN EXERCISE 7
         bin = ceil(dr/_bin_size); // capisco in quale bin rientra la distanza, approssimo per eccesso
+        std::cout << "dr = " << dr << "bin_size = " << _bin_size << ", bin = " << bin 
+          << ", index = " << (_index_gofr + bin) 
+          << ", measurement size = " << _measurement.n_elem << std::endl;
           if(bin < _n_bins) {
             _measurement(_index_gofr + bin) += 2.0 / (_npart * _rho * ( (4*M_PI/3) * ( pow(bin * _bin_size, 3) - pow( (bin-1) * _bin_size , 3 ) ) ) ) ; // incremento il contatore del bin e lo normalizzo
           }
@@ -721,9 +724,11 @@ void System :: averages(int blk){
       sum_average = _global_av(_index_gofr + i);
       sum_ave2 = _global_av2(_index_gofr + i);
       coutf << setw(12) << (i+0.5)*_bin_size
-            << setw(12) << average; // stampa la media istantanea del blocco
-      coutf2 << setw(12) << sum_average/double(blk)
+            << setw(12) << sum_average/double(blk)
             << setw(12) << this->error(sum_average, sum_ave2, blk) << endl;
+      coutf2 << setw(12) << (i+0.5)*_bin_size
+             << setw(12) << average; // stampa la media istantanea del blocco
+           
     }
     coutf.close();
   }
