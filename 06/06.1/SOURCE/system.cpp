@@ -619,27 +619,25 @@ void System :: measure(){ // Measure properties
     magnetization /= double(_npart);
     _measurement(_index_magnet) = magnetization;
   }
+
   // SPECIFIC HEAT /////////////////////////////////////////////////////////////
 // TO BE FIXED IN EXERCISE 6
-  if (_measure_cv and _measure_penergy) {
-    double cv=0.0;
-    // sfrutto lo slot del calore specifico in measure per calcolare <H^2>
-    for (int i=0; i<_npart; i++){
-      cv += _measurement(_index_penergy) * _measurement(_index_penergy);
-    }
-    cv = cv/double(_npart);
-    _measurement(_index_cv) = cv;
+  if (_measure_cv and _measure_tenergy) {
+    _measurement(_index_cv) = _measurement(_index_tenergy) * _measurement(_index_tenergy);
   }
+
+
   // SUSCEPTIBILITY ////////////////////////////////////////////////////////////
 // TO BE FIXED IN EXERCISE 6
-  if (_measure_chi) {
-    double chi = 0.0;
-    for (int i=0; i<_npart; i++){
-      chi += _particle(i).getspin();
-    }
-    chi = chi*chi*_beta/double(_npart);
-    _measurement(_index_chi) = chi;
+if (_measure_chi) {
+  double chi = 0.0;
+  for (int i=0; i<_npart; i++){
+    chi += _particle(i).getspin();
   }
+  chi = chi*chi*_beta/double(_npart);
+  _measurement(_index_chi) = chi;
+}
+
 
   _block_av += _measurement; //Update block accumulators
 
@@ -757,9 +755,9 @@ void System :: averages(int blk){
   // TO BE FIXED IN EXERCISE 6
   if(_measure_cv and _measure_penergy){
     coutf.open("../OUTPUT/specific_heat.dat",ios::app);
-    average  = _average(_index_cv);
-    sum_average = _global_av(_index_cv);
-    sum_ave2 = _global_av2(_index_cv);
+    average  = pow(_beta,2)*(_average(_index_cv)-pow(_average(_index_tenergy),2))*_npart; // perché moltiplico per _npart?
+    sum_average = pow(_beta,2)*(_global_av(_index_cv)/blk-pow(_global_av(_index_tenergy)/blk,2))*_npart;
+    sum_ave2 = _global_av2(_index_cv); // oppure = sum_average * sum_average?
     coutf << setw(12) << blk
           << setw(12) << average
           << setw(12) << sum_average/double(blk)
@@ -768,6 +766,7 @@ void System :: averages(int blk){
   //  _global_av(_index_cv) -= _average(_index_cv);
   //  _global_av2(_index_cv) -= _average(_index_cv) * _average(_index_cv);
   }
+
   // SUSCEPTIBILITY ////////////////////////////////////////////////////////////
   // TO BE FIXED IN EXERCISE 6
   if (_measure_chi){
@@ -781,6 +780,8 @@ void System :: averages(int blk){
           << setw(12) << this->error(sum_average, sum_ave2, blk) << endl;
     coutf.close();
   }
+
+
   // ACCEPTANCE ////////////////////////////////////////////////////////////////
   double fraction;
   coutf.open("../OUTPUT/acceptance.dat",ios::app);
