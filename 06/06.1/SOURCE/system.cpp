@@ -374,7 +374,7 @@ void System :: initialize_properties(){ // Initialize data members used for meas
         coutpv.close();
         input>>_n_bins_v;
         _nprop += _n_bins_v;
-        _bin_size_v = 4.0*sqrt(_temp)/(double)_n_bins_v; // TO BE FIXED IN EXERCISE 4 (valore massimo oltre al quale misuro le cose); meglio mettere qualcosa che dipenda da sqrt(T)
+        _bin_size_v = 4.0*sqrt(_temp)/(double)_n_bins_v; // FIXED IN EXERCISE 4 (valore massimo oltre al quale misuro le cose); meglio mettere qualcosa che dipenda da sqrt(T)
         _measure_pofv = true;
         _index_pofv = index_property;
         index_property += _n_bins_v;
@@ -621,12 +621,25 @@ void System :: measure(){ // Measure properties
   }
   // SPECIFIC HEAT /////////////////////////////////////////////////////////////
 // TO BE FIXED IN EXERCISE 6
-  //if (_measure_cv and _measure_tenergy) {
-//
-  //  
-  //}
+  if (_measure_cv and _measure_penergy) {
+    double cv=0.0;
+    // sfrutto lo slot del calore specifico in measure per calcolare <H^2>
+    for (int i=0; i<_npart; i++){
+      cv += _measurement(_index_penergy) * _measurement(_index_penergy);
+    }
+    cv = cv/double(_npart);
+    _measurement(_index_cv) = cv;
+  }
   // SUSCEPTIBILITY ////////////////////////////////////////////////////////////
 // TO BE FIXED IN EXERCISE 6
+  if (_measure_chi) {
+    double chi = 0.0;
+    for (int i=0; i<_npart; i++){
+      chi += _particle(i).getspin();
+    }
+    chi = chi*chi*_beta/double(_npart);
+    _measurement(_index_chi) = chi;
+  }
 
   _block_av += _measurement; //Update block accumulators
 
@@ -727,19 +740,47 @@ void System :: averages(int blk){
     coutf.close();
   }
 
-
-
-
   // MAGNETIZATION /////////////////////////////////////////////////////////////
-  // TO BE FIXED IN EXERCISE 6
+  // FIXED IN EXERCISE 6
+  if (_measure_magnet){
+    coutf.open("../OUTPUT/magnetization.dat",ios::app);
+    average  = _average(_index_magnet);
+    sum_average = _global_av(_index_magnet);
+    sum_ave2 = _global_av2(_index_magnet);
+    coutf << setw(12) << blk
+          << setw(12) << average
+          << setw(12) << sum_average/double(blk)
+          << setw(12) << this->error(sum_average, sum_ave2, blk) << endl;
+    coutf.close();
+  }
   // SPECIFIC HEAT /////////////////////////////////////////////////////////////
   // TO BE FIXED IN EXERCISE 6
-  //if(_measure_cv){
+  if(_measure_cv and _measure_penergy){
+    coutf.open("../OUTPUT/specific_heat.dat",ios::app);
+    average  = _average(_index_cv);
+    sum_average = _global_av(_index_cv);
+    sum_ave2 = _global_av2(_index_cv);
+    coutf << setw(12) << blk
+          << setw(12) << average
+          << setw(12) << sum_average/double(blk)
+          << setw(12) << this->error(sum_average, sum_ave2, blk) << endl;
+    coutf.close();
   //  _global_av(_index_cv) -= _average(_index_cv);
   //  _global_av2(_index_cv) -= _average(_index_cv) * _average(_index_cv);
-  //}
+  }
   // SUSCEPTIBILITY ////////////////////////////////////////////////////////////
   // TO BE FIXED IN EXERCISE 6
+  if (_measure_chi){
+    coutf.open("../OUTPUT/susceptibility.dat",ios::app);
+    average  = _average(_index_chi);
+    sum_average = _global_av(_index_chi);
+    sum_ave2 = _global_av2(_index_chi);
+    coutf << setw(12) << blk
+          << setw(12) << average
+          << setw(12) << sum_average/double(blk)
+          << setw(12) << this->error(sum_average, sum_ave2, blk) << endl;
+    coutf.close();
+  }
   // ACCEPTANCE ////////////////////////////////////////////////////////////////
   double fraction;
   coutf.open("../OUTPUT/acceptance.dat",ios::app);
