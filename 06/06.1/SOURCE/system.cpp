@@ -753,19 +753,22 @@ void System :: averages(int blk){
   }
   // SPECIFIC HEAT /////////////////////////////////////////////////////////////
   // TO BE FIXED IN EXERCISE 6
-  if(_measure_cv and _measure_penergy){
-    coutf.open("../OUTPUT/specific_heat.dat",ios::app);
-    average  = pow(_beta,2)*(_average(_index_cv)-pow(_average(_index_tenergy),2))*_npart; // perché moltiplico per _npart?
-    sum_average = pow(_beta,2)*(_global_av(_index_cv)/blk-pow(_global_av(_index_tenergy)/blk,2))*_npart;
-    sum_ave2 = _global_av2(_index_cv); // oppure = sum_average * sum_average?
+  if (_measure_cv and _measure_tenergy){
+    _global_av(_index_cv) -= _average(_index_cv); // tolgo quanto è stato messo
+    _global_av2(_index_cv) -= _average(_index_cv) * _average(_index_cv);
+    average = pow(_beta,2) * (_average(_index_cv) - pow(_average(_index_tenergy),2))*_npart; // calcolo la vera grandezza cui sono interessata
+    // moltiplico per _npart perché l'energia è per particella, mentre la capacità termica è per sistema
+    _global_av(_index_cv) += average;
+    _global_av2(_index_cv) += average * average;
+    coutf.open("../OUTPUT/specific_heat.dat",ios::app);                                  
+    sum_average = _global_av(_index_cv);
+    sum_ave2 = _global_av2(_index_cv);
     coutf << setw(12) << blk
           << setw(12) << average
           << setw(12) << sum_average/double(blk)
           << setw(12) << this->error(sum_average, sum_ave2, blk) << endl;
     coutf.close();
-  //  _global_av(_index_cv) -= _average(_index_cv);
-  //  _global_av2(_index_cv) -= _average(_index_cv) * _average(_index_cv);
-  }
+    }
 
   // SUSCEPTIBILITY ////////////////////////////////////////////////////////////
   // TO BE FIXED IN EXERCISE 6
