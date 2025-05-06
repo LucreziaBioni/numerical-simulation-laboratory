@@ -611,7 +611,7 @@ void System :: measure(){ // Measure properties
   // PRESSURE //////////////////////////////////////////////////////////////////
   if (_measure_pressure) _measurement[_index_pressure] = _rho * (2.0/3.0) * kenergy_temp + (_ptail*_npart + 48.0*virial/3.0)/_volume;
   // MAGNETIZATION /////////////////////////////////////////////////////////////
-// TO BE FIXED IN EXERCISE 6
+// FIXED IN EXERCISE 6
   if (_measure_magnet){
     for (int i=0; i<_npart; i++){
       magnetization += _particle(i).getspin();
@@ -621,14 +621,14 @@ void System :: measure(){ // Measure properties
   }
 
   // SPECIFIC HEAT /////////////////////////////////////////////////////////////
-// TO BE FIXED IN EXERCISE 6
+// FIXED IN EXERCISE 6
   if (_measure_cv and _measure_tenergy) {
     _measurement(_index_cv) = _measurement(_index_tenergy) * _measurement(_index_tenergy);
   }
 
 
   // SUSCEPTIBILITY ////////////////////////////////////////////////////////////
-// TO BE FIXED IN EXERCISE 6
+// FIXED IN EXERCISE 6
 if (_measure_chi) {
   double chi = 0.0;
   for (int i=0; i<_npart; i++){
@@ -752,7 +752,7 @@ void System :: averages(int blk){
     coutf.close();
   }
   // SPECIFIC HEAT /////////////////////////////////////////////////////////////
-  // TO BE FIXED IN EXERCISE 6
+  // FIXED IN EXERCISE 6
   if (_measure_cv and _measure_tenergy){
     _global_av(_index_cv) -= _average(_index_cv); // tolgo quanto è stato messo
     _global_av2(_index_cv) -= _average(_index_cv) * _average(_index_cv);
@@ -771,7 +771,7 @@ void System :: averages(int blk){
     }
 
   // SUSCEPTIBILITY ////////////////////////////////////////////////////////////
-  // TO BE FIXED IN EXERCISE 6
+  // FIXED IN EXERCISE 6
   if (_measure_chi){
     coutf.open("../OUTPUT/susceptibility.dat",ios::app);
     average  = _average(_index_chi);

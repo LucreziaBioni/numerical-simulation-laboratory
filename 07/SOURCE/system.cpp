@@ -353,7 +353,7 @@ void System :: initialize_properties(){ // Initialize data members used for meas
         _measure_pressure = true;
         _index_pressure = index_property;
         index_property++;
-        _ptail = 32 * M_PI * _rho * ( 1. / ( 9. * pow(_r_cut , 9) ) - 1. / ( 6. * pow(_r_cut , 3) ) ) ; // TO BE FIXED IN EXERCISE 7
+        _ptail = 32 * M_PI * _rho * ( 1. / ( 9. * pow(_r_cut , 9) ) - 1. / ( 6. * pow(_r_cut , 3) ) ) ; // FIXED IN EXERCISE 7
       } else if( property == "GOFR" ){
         ofstream coutgr("../OUTPUT/gofr.dat");
         coutgr << "# DISTANCE:     AVE_GOFR:        ERROR:" << endl;
@@ -560,7 +560,7 @@ void System :: measure(){ // Measure properties
         distance(2) = this->pbc( _particle(i).getposition(2,true) - _particle(j).getposition(2,true), 2);
         dr = sqrt( dot(distance,distance) );
         // GOFR ... FIXED IN EXERCISE 7
-        bin = ceil(dr/_bin_size); // capisco in quale bin rientra la distanza, approssimo per eccesso
+        bin = ceil(dr/_bin_size); // capisco in quale bin rientra la distanza
           if(bin < _n_bins) {
             _measurement(_index_gofr + bin) += 2.0 / (_npart * _rho * ( (4*M_PI/3) * ( pow(bin * _bin_size, 3) - pow( (bin-1) * _bin_size , 3 ) ) ) ) ; // incremento il contatore del bin e lo normalizzo
           }

@@ -40,12 +40,12 @@ int main (int argc, char *argv[]){
       input.close();
     } else cerr << "PROBLEM: Unable to open seed.in" << endl;
 
-    double L{1.} , d{5.}; // L lunghezza dell'ago, d distanza tra righe
-    int N_lanci{100000};
+    double L{1.} , d{3.}; // L lunghezza dell'ago, d distanza tra righe
+    int N_lanci{1000000};
     int N_blocchi{100};
     int n{ N_lanci / N_blocchi}; // numero di lanci per blocco
     double r{}, theta{}; // r distanza del baricentro dell'ago dalla riga, theta angolo dell'ago da linea parallela a riga
-    double pi = M_PI; // da modificare!!!!
+    double x{}, y{};
 
     double ave_blocco{}; // quando inserito nel ciclo for, contiene la media dei valori dei primi (i+1) blocchi
     double ave2_blocco{}; // quando inserito nel ciclo for, la media dei quadrati dei valori dei primi (i+1) blocchi
@@ -54,18 +54,28 @@ int main (int argc, char *argv[]){
     double pi_value{};
     ofstream fout ("data.dat");
     for( int i = 0; i< N_blocchi ; i++ ){
-        double sum = 0; // numero di hit in un blocco
+        int sum = 0; // numero di hit in un blocco
+        int validi = 0; 
         for( int j=0 ; j<n ; j++ ){ // effettuo n lanci, e conto quanti hit ci sono
+            x = rnd.Rannyu(-1, 1);
+            y = rnd.Rannyu(-1, 1);
             r = rnd.Rannyu(0, d/2);
-            theta = rnd.Rannyu(0,pi/2);
-            if( r <= L/2 * sin(theta) ){
+            if(  x*x + y*y < 1 ){ // se il punto non è all'interno del cerchio di raggio 1
+                validi++; // incremento il numero di lanci validi
+                if(y >= 0){
+                    theta = acos( x / sqrt(x*x + y*y) );
+                } else {
+                    theta = 2*M_PI - acos( x / sqrt(x*x + y*y) );
+                }
+                if( r <= L/2 * fabs(sin(theta)) ){
                 sum = sum + 1; // conto il numero di hit
                 //pi_value += 2*L*(j+1) / (d*sum);
+                }
             }
         }
         if (sum != 0) {
             //pi_value = pi_value / sum; // divido la somma di valori accumulati per il numero di hit
-            pi_value = 2*L*n / (d*sum);
+            pi_value = 2.*L*validi / (d*sum);
         } else {
             pi_value = 0; //caso in cui non ci siano hits
         }
