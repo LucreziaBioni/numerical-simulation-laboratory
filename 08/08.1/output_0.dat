@@ -1,0 +1,4 @@
+mu = 0
+sigma = 1
+delta = 1.56921
+tuned_acceptance = 0.58

@@ -592,9 +592,15 @@ void System :: measure(){ // Measure properties
   }
   // KINETIC ENERGY ////////////////////////////////////////////////////////////
   if (_measure_kenergy){
-    for (int i=0; i<_npart; i++) kenergy_temp += 0.5 * dot( _particle(i).getvelocity() , _particle(i).getvelocity() ); 
-    kenergy_temp /= double(_npart);
-    _measurement(_index_kenergy) = kenergy_temp;
+    if (_sim_type == 0){
+      for (int i=0; i<_npart; i++) kenergy_temp += 0.5 * dot( _particle(i).getvelocity() , _particle(i).getvelocity() ); 
+      kenergy_temp /= double(_npart);
+      _measurement(_index_kenergy) = kenergy_temp;
+    }
+    if(_sim_type == 1){
+      kenergy_temp = 3./2. * _temp;
+      _measurement(_index_kenergy) = kenergy_temp/double(_npart);
+    }
   }
   // TOTAL ENERGY (kinetic+potential) //////////////////////////////////////////
   if (_measure_tenergy){
