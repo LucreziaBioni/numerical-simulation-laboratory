@@ -17,7 +17,7 @@ bool metro_H(double x , double y, double mu, double sigma, Random&  rnd);
 double Hpsi(double x , double mu, double sigma);
 double set_delta(Random& rnd, double& delta, double mu, double sigma, double x0, int steps);
 vector<double> compute_H ( Random& rnd , double mu, double sigma );
-bool metro_par(Random& rnd, double sigma_old , double sigma_new , double mu_old , double mu_new , double beta );
+bool metro_par(Random& rnd, double H_old , double H_new , double beta );
 
 
 int main (int argc, char *argv[]){
@@ -45,24 +45,28 @@ int main (int argc, char *argv[]){
        input.close();
     } else cerr << "PROBLEM: Unable to open seed.in" << endl;
 
-    double mu = 1.0, sigma = 1.0; // parametri iniziali
+    double mu = 1.0, sigma = 1.0;
+    vector <double> H = compute_H( rnd, mu, sigma); // parametri iniziali
 
     ofstream coutp("parameters.dat");
-    coutp << "T  \t \t mu \t \t sigma" << endl;
+    coutp << "T  \t \t mu \t \t sigma \t \t H \t \t err" << endl;
     for ( double T = 2. ; T>= 0.01  ; T*=0.99){ // 
         for ( int n = 0 ; n < 100 ; n++){
-
-            double delta = 0.5 * T; // ampiezza del passo di Metropolis (lo modifico in base alla temperatura)
+            double delta_mu = 0.75 * T; // ampiezza del passo di Metropolis (lo modifico in base alla temperatura)
+            double delta_sigma = 0.75 * T; // ampiezza del passo di Metropolis (lo modifico in base alla temperatura)
             double beta = 1./T; // beta
-            double mu_new = mu + rnd.Rannyu(-1, 1)*delta; // nuova proposta per mu
-            double sigma_new = fabs(sigma + rnd.Rannyu(-1, 1)*delta); // nuova proposta per sigma
-            if (metro_par(rnd, sigma , sigma_new , mu , mu_new , beta)){
+            double mu_new = mu + rnd.Rannyu(-1, 1)*delta_mu; // nuova proposta per mu
+            double sigma_new = fabs(sigma + rnd.Rannyu(-1, 1)*delta_sigma); // nuova proposta per sigma
+            vector <double> H_new = compute_H( rnd, mu_new, sigma_new); // nuova proposta per H
+            if (metro_par(rnd, H[0] , H_new[0] , beta)){
                 mu = mu_new; // accetto la nuova proposta
                 sigma = sigma_new; // accetto la nuova proposta
+                H = H_new;
+            } else {
+                H = compute_H(rnd, mu, sigma); // aggiorni comunque H, anche se non accetti
             }
-
         }
-        coutp << T << "\t \t" << mu << "\t \t" << sigma << endl;
+        coutp << T << "\t \t" << mu << "\t \t" << sigma << "\t \t " << H[0] << "\t \t" << H[1] << endl;
     }
 
 
@@ -76,7 +80,7 @@ vector<double> compute_H ( Random& rnd , double mu, double sigma ){
     double delta = 0.5; // ampiezza del passo di Metropolis
 
     int n_steps = 1000; // numero di passi per blocco
-    int n_blocks = 10; // numero di blocchi
+    int n_blocks = 20; // numero di blocchi
     int tune_steps = 1000; // numero di passi per il tuning del delta
     double tuned_acceptance = set_delta(rnd, delta, mu, sigma, x, tune_steps);
     
@@ -90,6 +94,8 @@ vector<double> compute_H ( Random& rnd , double mu, double sigma ){
     //double n_attemps{};
     //double n_accepted{};
 
+    int block_eq = 0; // numero di blocchi da scartare per l'equilibrazione
+
   for(int i=0; i <n_blocks; i++){ //loop over blocks
     double stima = 0;
     //n_attemps = 0;
@@ -102,6 +108,8 @@ vector<double> compute_H ( Random& rnd , double mu, double sigma ){
             x = y;
             //n_accepted++;
         }
+         if (i < block_eq)
+                continue;
         stima +=  Hpsi(x, mu, sigma);
     }
     partial_sum= partial_sum + stima/n_steps;
@@ -142,9 +150,9 @@ bool metro_H(double x , double y, double mu, double sigma, Random&  rnd){ // Met
     return decision;
 }
 
-bool metro_par(Random& rnd, double sigma_old , double sigma_new , double mu_old , double mu_new , double beta ){
+bool metro_par(Random& rnd, double H_old , double H_new , double beta ){
     bool decision = false;
-    double acceptance = exp(-beta * ( compute_H(rnd , mu_new , sigma_new)[0] - compute_H(rnd , mu_old , sigma_old)[0] ) );
+    double acceptance = exp(-beta * ( H_new - H_old ) );
     if(rnd.Rannyu() < acceptance ) decision = true; //Metropolis acceptance step
     return decision;
 }
@@ -178,4 +186,6 @@ double set_delta(Random& rnd, double& delta, double mu, double sigma, double x0,
     }
     return acceptance;
 }
+
+
 

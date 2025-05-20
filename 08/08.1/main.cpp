@@ -46,12 +46,13 @@ int main (int argc, char *argv[]){
 
     // Simulation parameters
     double x = 0.0; // configurazione (posizione) iniziale
-    vector<double> mu_values = {0.0, 0.0, 1.0, 1.0};
-    vector<double> sigma_values = {1.0,0.5,1.0,0.5};
+    vector<double> mu_values = {-1.67537, 0.729292, 1.0, 1.0};
+    vector<double> sigma_values = {0.045644,0.647,1.0,0.5};
+    	 	
     double delta = 0.5; // ampiezza del passo di Metropolis
 
     int n_steps = 10000; // numero di passi per blocco
-    int n_blocks = 100; // numero di blocchi
+    int n_blocks = 20; // numero di blocchi
     int tune_steps = 1000; // numero di passi per il tuning del delta
 
     for (int k = 0; k < mu_values.size(); k++) {
