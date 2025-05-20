@@ -52,11 +52,14 @@ int main (int argc, char *argv[]){
     coutp << "T  \t \t mu \t \t sigma \t \t H \t \t err" << endl;
     for ( double T = 2. ; T>= 0.01  ; T*=0.99){ // 
         for ( int n = 0 ; n < 100 ; n++){
-            double delta_mu = 0.75 * T; // ampiezza del passo di Metropolis (lo modifico in base alla temperatura)
-            double delta_sigma = 0.75 * T; // ampiezza del passo di Metropolis (lo modifico in base alla temperatura)
+            double delta_mu =  0.5 * T; // ampiezza del passo di Metropolis (lo modifico in base alla temperatura)
+            double delta_sigma = 0.5 * T; // ampiezza del passo di Metropolis (lo modifico in base alla temperatura)
             double beta = 1./T; // beta
-            double mu_new = mu + rnd.Rannyu(-1, 1)*delta_mu; // nuova proposta per mu
-            double sigma_new = fabs(sigma + rnd.Rannyu(-1, 1)*delta_sigma); // nuova proposta per sigma
+            double mu_new = fabs(mu + rnd.Rannyu(-1, 1)*delta_mu); // nuova proposta per mu
+            double sigma_new;
+            do {
+                sigma_new = fabs(sigma + rnd.Rannyu(-1, 1) * delta_sigma);
+            } while (sigma_new <= 0.1);
             vector <double> H_new = compute_H( rnd, mu_new, sigma_new); // nuova proposta per H
             if (metro_par(rnd, H[0] , H_new[0] , beta)){
                 mu = mu_new; // accetto la nuova proposta
@@ -80,7 +83,7 @@ vector<double> compute_H ( Random& rnd , double mu, double sigma ){
     double delta = 0.5; // ampiezza del passo di Metropolis
 
     int n_steps = 1000; // numero di passi per blocco
-    int n_blocks = 20; // numero di blocchi
+    int n_blocks = 100; // numero di blocchi
     int tune_steps = 1000; // numero di passi per il tuning del delta
     double tuned_acceptance = set_delta(rnd, delta, mu, sigma, x, tune_steps);
     
