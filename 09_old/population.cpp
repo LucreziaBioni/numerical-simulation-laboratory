@@ -39,8 +39,7 @@ int Population::select_index() {
 }
 
 void Population::sort_by_length() {
-    // this function sorts the population by length
-    // putting the best (shortest) routes at the beginning of the vector
+    // Copia i dati in un vector
     std::vector<Route> temp_vec(_npop);
     for (int i = 0; i < _npop; ++i){
         temp_vec[i] = _pop[i];

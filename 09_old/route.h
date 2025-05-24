@@ -17,7 +17,7 @@ private:
   arma::Col<int> _route; // Route vector
   double _length; // Length of the route
   Random* _point_rnd;
-  double _pmut = 0.4; // Mutation probability
+  double _pmut = 0.1; // Mutation probability
 
 public: // Function declarations
   Route& operator=(const Route& other); 

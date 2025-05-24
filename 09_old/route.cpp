@@ -100,7 +100,7 @@ void Route :: initialize(  arma::mat * distance_matrix , Random &rnd ){
 }
 
 
-/*void Route :: shift( ){
+void Route :: shift( ){
     int n = (int) _point_rnd->Rannyu(1,_ndim-1);
     arma::Col<int> temp(_ndim);
     for(int i=0 ; i< _ndim ; i++){
@@ -113,41 +113,9 @@ void Route :: initialize(  arma::mat * distance_matrix , Random &rnd ){
         cout << "Error: Route not valid after shift" << endl;
     }
     return;
-}*/
-
-void Route::shift() {
-    int m = (int) _point_rnd->Rannyu(1, _ndim - 2); // m < N-1
-    int start = (int) _point_rnd->Rannyu(1, _ndim - m); // start from 1 to N - m - 1
-    int n = (int) _point_rnd->Rannyu(1, _ndim - m - start + 1); // ensure shift doesn't go past end
-
-    arma::Col<int> new_route(_ndim);
-    int idx = 0;
-
-    // Copia città fino al blocco da shiftare
-    for(int i = 0; i < start; ++i)
-        new_route(idx++) = _route(i);
-
-    // Copia le città tra il blocco e la posizione di inserimento
-    for(int i = start + m; i < start + m + n && i < _ndim; ++i)
-        new_route(idx++) = _route(i);
-
-    // Copia il blocco da shiftare
-    for(int i = start; i < start + m; ++i)
-        new_route(idx++) = _route(i);
-
-    // Copia il resto
-    for(int i = start + m + n; i < _ndim; ++i)
-        new_route(idx++) = _route(i);
-
-    _route = new_route;
-
-    if (!check()) {
-        cout << "Error: Route not valid after shift" << endl;
-    }
 }
 
-
-/*void Route :: swap_block(){
+void Route :: swap_block(){
     int m = (int) _point_rnd->Rannyu(1,_ndim/2 - 1 );
     int pos =(int) _point_rnd->Rannyu(1,_ndim - 1);
 
@@ -159,22 +127,7 @@ void Route::shift() {
     if(check() == false){
         cout << "Error: Route not valid after swap_block" << endl;
     }
-}*/
-
-void Route::swap_block() {
-    int m = (int)_point_rnd->Rannyu(1, _ndim / 2);
-    int pos1 = (int)_point_rnd->Rannyu(1, _ndim - 2 * m);
-    int pos2 = (int)_point_rnd->Rannyu(pos1 + m, _ndim - m); // garantisce non sovrapposizione
-
-    arma::Col<int> block1 = _route.subvec(pos1, pos1 + m - 1);
-    arma::Col<int> block2 = _route.subvec(pos2, pos2 + m - 1);
-
-    _route.subvec(pos1, pos1 + m - 1) = block2;
-    _route.subvec(pos2, pos2 + m - 1) = block1;
-
-    if(!check()) cout << "Error: Route not valid after swap_block" << endl;
 }
-
 
 void Route :: invert_block(){
     int start = pbc((int) _point_rnd->Rannyu(1, _ndim - 1 ));
@@ -200,7 +153,6 @@ void Route :: invert_block(){
     return;
 
 }
-
 
 void Route :: mutate(){
     double i = _point_rnd->Rannyu();

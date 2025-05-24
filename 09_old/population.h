@@ -16,7 +16,7 @@ class Population {
     private:
     Random _rnd;
     int _npop;
-    const double _selexp = 9.0;
+    const double _selexp = 2.4;
     arma::field <Route> _pop;
     arma::mat _dist_matrix;
     const double _pcross = 0.90;
