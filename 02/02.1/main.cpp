@@ -6,14 +6,7 @@
 
 using namespace std;
 
-double error_double( double AV, double AV2 , int n ){
-   // funzione che mi restituisce la deviazione standard di n elementi
-   if(n == 0){
-       return 0;
-   }
-   return sqrt( (AV2 - AV*AV)/n );
-   // oss: sarebbe diviso il numero di elementi - 1, ma io divido per n poiché l'indice dell'array parte da 0
-}
+double error_double( double AV, double AV2 , int n );
  
 int main (int argc, char *argv[]){
 
@@ -54,7 +47,7 @@ int main (int argc, char *argv[]){
    for( int i = 0; i< N ; i++ ){ // effettuo un ciclo sul numero di blocchi
       double stima = 0;
       for( int j=0 ; j<L ; j++ ){ // effettuo L stime dell'integrale
-         stima = stima + ( M_PI/2 * cos(M_PI * rnd.Rannyu() / 2) );
+         stima = stima + ( M_PI/2. * cos(M_PI * rnd.Rannyu() / 2.) );
       }
       partial_sum= partial_sum + stima/L;
       partial_sum2 =partial_sum2 + stima/L * stima/L;
@@ -88,4 +81,13 @@ int main (int argc, char *argv[]){
    fout_importance.close();
 
 
+}
+
+double error_double( double AV, double AV2 , int n ){
+   // funzione che mi restituisce la deviazione standard di n elementi
+   if(n == 0){
+       return 0;
+   }
+   return sqrt( (AV2 - AV*AV)/n );
+   // oss: sarebbe diviso il numero di elementi - 1, ma io divido per n poiché l'indice dell'array parte da 0
 }
