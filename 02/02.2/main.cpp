@@ -7,6 +7,7 @@
 
 using namespace std;
 
+double error_double( double AV, double AV2 , int n );
  
 int main (int argc, char *argv[]){
 
@@ -38,18 +39,22 @@ int main (int argc, char *argv[]){
    int N_random_walks = 10000;
    int L = N_random_walks/N_blocchi;
    int N_passi = 100;
-   <vector> double ave(N, 0.0);
-   <vector> double ave2(N, 0.0);
-   ofstream fout ("data.dat");
+   vector <double> ave(N_passi, 0.0);
+   vector <double> ave2(N_passi, 0.0);
+   vector <double> partial_sum(N_passi, 0.0);
+   vector <double> partial_sum2(N_passi, 0.0);
+   ofstream fout ("RW_discreto.dat");
+
+   // reticolo cubico discreto
 
    for(int i = 0 ; i < N_blocchi ; i++){ // numero di blocchi
       // all'interno di ogni blocco effettuo L random walks, e in ciascun random walk effettuo 100 passi
       // dunque ho bisogno di un vettore di 100 elementi che accumuli r^2 di ogni passo
       // poi divido per L ogni elemento di tale vettore e ne faccio la radice
 
-      <vector> double sqrt_r2(N, 0.0); // questo vettore contiene la media della radice quadrata di r^2 per ogni passo
+      vector <double> sum_r2(N_passi, 0.0); // questo vettore contiene la media della radice quadrata di r^2 per ogni passo
       for( int j = 0; j < L ; j++ )  { // effettuo L random walks
-         <vector>int posizione = {0,0,0,0,0,0}; // posizione iniziale (x+,x-,y+,y-,z+,z-)
+         vector <int> posizione = {0,0,0,0,0,0}; // posizione iniziale (x+,x-,y+,y-,z+,z-)
          for( int k=0 ; k<100 ; k++  ){ // in un random walk effettuo 100 passi
             double direction = rnd.Rannyu();
             double intervalli[6] = {1.0/6, 2.0/6, 3.0/6, 4.0/6, 5.0/6, 1.0};
@@ -57,57 +62,92 @@ int main (int argc, char *argv[]){
             for (int s = 0; s < 6; s++) {
                if (direction < intervalli[s]) {
                   indice = s;
-                  posizione.[s] += 1;
+                  posizione[s] += 1;
                   break;
                }
             }
-            sqrt_r2[k] = pow((posizione[0] - posizione[1])^2 + (posizione[2] - posizione[3])^2 + (posizione[4] - posizione[5]),2);
-         
+            sum_r2[k] += pow(posizione[0] - posizione[1],2) + pow(posizione[2] - posizione[3], 2) + pow(posizione[4] - posizione[5],2);
          }
       }
+      // dopo che ho effettuato L random walks, ho un vettore di 100 elementi che contiene le somme degli L r^2 per ogni passo
+      // dunque divido per L e faccio la radice quadrata di ogni elemento del vettore sum_r2, al fine di ottenere la media
+      for( int k=0 ; k<N_passi ; k++  ){
+         sum_r2[k] = sum_r2[k]/L;
+         sum_r2[k] = sqrt(sum_r2[k]);
+         // questo è l'output di ogni L-esimo blocco
+
+         // calcolo la media e la varianza di ogni passo
+         partial_sum[k] += sum_r2[k];
+         partial_sum2[k] += sum_r2[k]*sum_r2[k];
+         ave[k] = partial_sum[k] / (i+1);
+         ave2[k] = partial_sum2[k] / (i+1);
+         
+      }
    }
-      // dopo che ho accumulato tutti i valori di r^2 per ogni passo, ne faccio la media e ne calcolo la radice
-      for( int k=0 ; k<100 ; k++  ){
-         sqrt_r2[k] = sqrt_r2[k]/L;
-         sqrt_r2[k] = sqrt(sqrt_r2[k]);
-      }
-      // 
-      for( int k=0 ; k<100 ; k++  ){
-         ave[k] += sqrt_r2[k];
-         ave2[k] += sqrt_r2[k]*sqrt_r2[k];
-      }
-      
-   fout.open("dati/data.dat");
-  
-   for (int i = 0; i < N; i++) {
-      ave[i]/=(100);
-      ave2[i]/=(100);
-      err[i] =sqrt((ave -ave2)/99); //giusto ??
-      fout << ave[i] << "," << err[i] << endl;
+   // stampo i valori finali del valore medio ottenuto nell'N-esimo blocco per ogni passo
+   for (int i = 0; i < N_passi; i++) {
+      fout << i+1 << "\t" << ave[i] << "\t" << error_double(ave[i], ave2[i], N_blocchi) << endl;
    }
    fout.close();
 
 
+   // continuo
+   ave.assign(N_passi, 0.0);  // Azzero tutti gli elementi impostandoli a 0.0
+   ave2.assign(N_passi, 0.0);
+   partial_sum.assign(N_passi, 0.0);
+   partial_sum2.assign(N_passi, 0.0);
+   ofstream fout_c ("RW_continuo.dat");
 
+   for(int i = 0 ; i < N_blocchi ; i++){ // numero di blocchi
+      // all'interno di ogni blocco effettuo L random walks, e in ciascun random walk effettuo 100 passi
+      // dunque ho bisogno di un vettore di 100 elementi che accumuli r^2 di ogni passo
+      // poi divido per L ogni elemento di tale vettore e ne faccio la radice
 
-   // alla fine del for calcolo la media di ogni elemento che ho accumulato 
+      vector <double> sum_r2(N_passi, 0.0); // questo vettore contiene la media della radice quadrata di r^2 per ogni passo
+      for( int j = 0; j < L ; j++ )  { // effettuo L random walks
+         vector <double> posizione = {0,0,0}; // posizione iniziale (x,y,z)
+         for( int k=0 ; k<N_passi ; k++  ){ // in un random walk effettuo 100 passi
+            double theta = rnd.Rannyu(0,M_PI);
+            double phi = rnd.Rannyu(0,2*M_PI);
+            posizione[0] += sin(theta) * cos(phi); // x
+            posizione[1] += sin(theta) * sin(phi); // y
+            posizione[2] += cos(theta); // z
+            sum_r2[k] += pow(posizione[0],2) + pow(posizione[1], 2) + pow(posizione[2],2);
+         }
+      }
+      // dopo che ho effettuato L random walks, ho un vettore di 100 elementi che contiene le somme degli L r^2 per ogni passo
+      // dunque divido per L e faccio la radice quadrata di ogni elemento del vettore sum_r2, al fine di ottenere la media
+      for( int k=0 ; k<N_passi ; k++  ){
+         sum_r2[k] = sum_r2[k]/L;
+         sum_r2[k] = sqrt(sum_r2[k]);
+         // questo è l'output di ogni L-esimo blocco
 
-   <vector>int posizione = {0,0,0,0,0,0}; // posizione iniziale (x+,x-,y+,y-,z+,z-)
-   // un random walk
-   // genero un numero che mi dica lungo quale asse mi sposto
-   double direction = rnd.Rannyu();
-   double intervalli[6] = {1.0/6, 2.0/6, 3.0/6, 4.0/6, 5.0/6, 1.0};
-   int indice = 0;
-   for (int i = 0; i < 6; i++) {
-        if (direction < intervalli[i]) {
-            indice = i;
-            posizione.[i] += 1;
-            break;
-        }
+         // calcolo la media e la varianza di ogni passo
+         partial_sum[k] += sum_r2[k];
+         partial_sum2[k] += sum_r2[k]*sum_r2[k];
+         ave[k] = partial_sum[k] / (i+1);
+         ave2[k] = partial_sum2[k] / (i+1);
+         
+      }
    }
-   r2 = (posizione[0] - posizione[1])^2 + (posizione[2] - posizione[3])^2 + (posizione[4] - posizione[5])^2;
+   // stampo i valori finali del valore medio ottenuto nell'N-esimo blocco per ogni passo
+   for (int i = 0; i < N_passi; i++) {
+      fout_c << i+1 << "\t" << ave[i] << "\t" << error_double(ave[i], ave2[i], N_blocchi) << endl;
+   }
+   fout_c.close();
+
+
 
 
 
  return 0;
+}
+
+double error_double( double AV, double AV2 , int n ){
+   // funzione che mi restituisce la deviazione standard di n elementi
+   if(n == 0){
+       return 0;
+   }
+   return sqrt( (AV2 - AV*AV)/n );
+   // oss: sarebbe diviso il numero di elementi - 1, ma io divido per n poiché l'indice dell'array parte da 0
 }
