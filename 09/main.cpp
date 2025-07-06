@@ -74,7 +74,7 @@ void generate_cities(int choice, int n_cities, arma::mat & dist_matrix) {
     // Calculate the distance matrix
     for(int i = 0; i < n_cities; i++) {
         for(int j = 0; j <  n_cities; j++) {
-            dist_matrix(i,j) = pow(x(i)-x(j),2) + pow(y(i)-y(j),2); // L2 norm
+            dist_matrix(i,j) = sqrt(pow(x(i)-x(j),2) + pow(y(i)-y(j),2)); // L1 norm
             //dist_matrix(j,i) = dist_matrix(i,j); // Symmetric matrix
         }
     }

@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// operatore di assegnazione
 Route& Route::operator=(const Route& other) {
     if (this != &other) {
         this->_route = other._route;
@@ -15,17 +16,18 @@ Route& Route::operator=(const Route& other) {
     return *this;
 }
 
-
+// colloca una città in una posizione specifica del percorso
 void Route :: setstop(int stop , int city){
     _route(stop) = city;
     return;
 }
 
+// restituisce la città in una posizione specifica del percorso
 int Route :: getstop(int stop){
     return _route(stop);
 }
 
-
+// controlla se il percorso è valido (nessuna città ripetuta)
 bool Route ::  check(){
     for(int i = 0; i < _ndim ; i++){
         for( int j = i+1; j < _ndim ; j++){
@@ -37,6 +39,7 @@ bool Route ::  check(){
     return true;
 }
 
+// restituisce l'indice corretto per le condizioni al contorno periodiche
 int Route :: pbc(int city) const{
     if(city >= _ndim){
         return city - _ndim + 1;
@@ -44,6 +47,7 @@ int Route :: pbc(int city) const{
     return city;
 }
 
+// inverte l'ordine di due città nel percorso
 void Route :: swap(int i, int j){
     int temp = _route(i);
     _route(i) = _route(j);
@@ -51,6 +55,7 @@ void Route :: swap(int i, int j){
     return;
 }
 
+// scambia due città in posizioni casuali nel percorso
 void Route :: swap(){
     int i = (int) _point_rnd->Rannyu(1,_ndim); // generates a random number in [1,_ndim)
     int j = (int) _point_rnd->Rannyu(1,_ndim);
@@ -60,6 +65,8 @@ void Route :: swap(){
     return;
 }
 
+
+// calcola la lunghezza del percorso utilizzando una matrice delle distanze
 double Route :: calculate_length( const arma::mat * distance_matrix ) const {
     double length = 0;
     for(int i=0 ; i < _ndim - 1 ; i++){
@@ -70,7 +77,7 @@ double Route :: calculate_length( const arma::mat * distance_matrix ) const {
     return length;
 }
 
-
+// inizializza un percorso con una distribuzione casuale di città e ne calcola la lunghezza
 void Route :: initialize(  arma::mat * distance_matrix , Random &rnd ){
 
     _point_rnd = &rnd;
@@ -100,21 +107,7 @@ void Route :: initialize(  arma::mat * distance_matrix , Random &rnd ){
 }
 
 
-/*void Route :: shift( ){
-    int n = (int) _point_rnd->Rannyu(1,_ndim-1);
-    arma::Col<int> temp(_ndim);
-    for(int i=0 ; i< _ndim ; i++){
-        temp(i) = _route(i);
-    }
-    for(int j = 1; j < _ndim ; j++){
-        _route(pbc(j+n)) = temp(j);
-    }
-    if(check() == false){
-        cout << "Error: Route not valid after shift" << endl;
-    }
-    return;
-}*/
-
+// sposta un blocco di città in una nuova posizione nel percorso
 void Route::shift() {
     int m = (int) _point_rnd->Rannyu(1, _ndim - 2); // m < N-1
     int start = (int) _point_rnd->Rannyu(1, _ndim - m); // start from 1 to N - m - 1
@@ -147,20 +140,7 @@ void Route::shift() {
 }
 
 
-/*void Route :: swap_block(){
-    int m = (int) _point_rnd->Rannyu(1,_ndim/2 - 1 );
-    int pos =(int) _point_rnd->Rannyu(1,_ndim - 1);
-
-    for(int i=0 ; i < m ; i++){
-        int j = pbc(i+pos);
-        int k = pbc(i+m+pos);
-        this->swap(j,k);
-    }
-    if(check() == false){
-        cout << "Error: Route not valid after swap_block" << endl;
-    }
-}*/
-
+// fa uno swap di due blocchi di città nel percorso
 void Route::swap_block() {
     int m = (int)_point_rnd->Rannyu(1, _ndim / 2);
     int pos1 = (int)_point_rnd->Rannyu(1, _ndim - 2 * m);
@@ -175,7 +155,7 @@ void Route::swap_block() {
     if(!check()) cout << "Error: Route not valid after swap_block" << endl;
 }
 
-
+// inverte l'ordine delle città tra due indici randomici
 void Route :: invert_block(){
     int start = pbc((int) _point_rnd->Rannyu(1, _ndim - 1 ));
     int end = pbc((int) _point_rnd->Rannyu(1,_ndim - 1));
@@ -201,7 +181,7 @@ void Route :: invert_block(){
 
 }
 
-
+// applica una mutazione randomica al percorso
 void Route :: mutate(){
     double i = _point_rnd->Rannyu();
     if(i < _pmut){
