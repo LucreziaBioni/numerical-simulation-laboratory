@@ -28,8 +28,8 @@ int main(){
     generate_cities(choice, n_cities, dist_matrix); // Generate cities and distance matrix
 
     Population pop; // Create a population object
-    int npop = 500; // Number of individuals in the population
-    int ngen = 500; // Number of generations
+    int npop = 200; // Number of individuals in the population
+    int ngen = 300; // Number of generations
     pop.initialize_pop(npop, ngen, &dist_matrix); // Initialize the population
     pop.evolve(dist_matrix); // Evolve the population
 
@@ -56,24 +56,25 @@ void generate_cities(int choice, int n_cities, arma::mat & dist_matrix) {
 
     if (choice == 0) {
         // Generate cities on a circumference
-        for (int i = 1; i <= n_cities; i++) {
+        for (int i = 0; i < n_cities; i++) {
             double theta = rnd_city.Rannyu(0, 2 * M_PI);
             x[i] =  cos(theta);
             y[i] =  sin(theta);
-            outc << i << "\t\t" << x[i] << "\t\t" << y[i] << endl;
+            outc << i+1 << "\t\t" << x[i] << "\t\t" << y[i] << endl;
         }
     } else if (choice == 1) {
         // Generate cities inside a square
         for (int i = 0; i < n_cities; i++) {
-            x[i] = rnd_city.Rannyu();
-            y[i] = rnd_city.Rannyu();
+            x[i] = rnd_city.Rannyu(-1.0, 1.0); // Random x coordinate in [-1, 1]
+            y[i] = rnd_city.Rannyu(-1.0, 1.0); // Random y coordinate in [-1, 1]
+            outc << i+1 << "\t\t" << x[i] << "\t\t" << y[i] << endl;
         }
     }
 
     // Calculate the distance matrix
     for(int i = 0; i < n_cities; i++) {
         for(int j = 0; j <  n_cities; j++) {
-            dist_matrix(i,j) = pow(x(i)-x(j),2) + pow(y(i)-y(j),2); // L2 norm
+            dist_matrix(i,j) = sqrt(pow(x(i)-x(j),2) + pow(y(i)-y(j),2)); // L1 norm
             //dist_matrix(j,i) = dist_matrix(i,j); // Symmetric matrix
         }
     }
