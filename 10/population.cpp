@@ -86,7 +86,7 @@ int Population::size() const {
 
 // funzione per il pbc (periodic boundary condition) che restituisce l'indice corretto
 int Population :: pbc(int city) const{
-    int ndim = 34;
+    int ndim = 110; // Dimensione del percorso (numero di città)
     if(city >= ndim){
         return city - ndim + 1;
     }
@@ -168,11 +168,13 @@ arma::Col<int> Population :: sort_by_reference(arma::Col<int> a, arma::Col<int> 
     return arma::Col<int>(sorted); // riconverto vector in vettore di armadillo
 }
 
-// FRunzione di evoluzione della popolazione
-void Population::evolve( const arma::mat dist_matrix) {
+// Funzione di evoluzione della popolazione
+void Population::evolve( const arma::mat dist_matrix, int rank , int size) {
 
-    ofstream coutf("results.dat");
-    coutf << "#" << "\t\t L2 \t\t <L2>" << endl;
+   
+    ofstream coutf("./simulazioni-eseguite/results/results_" + to_string(rank) + ".dat");
+    coutf << "#" << "\t\t L1 \t\t <L1>" << endl;
+
 
     sort_by_length(); // Ordina la popolazione iniziale in base alla lunghezza del percorso
 
@@ -203,23 +205,88 @@ void Population::evolve( const arma::mat dist_matrix) {
         _pop = figli;
         sort_by_length();
 
+        // Migrazione ogni N_migr generazioni
+        if (i % N_migr == 0 && i != 0 && size > 1) {
+            int dim = 110; // Dimensione del percorso (numero di città)
+            // Preparazione buffer per la migrazione
+            arma::field<arma::Col<int>> migranti_inviare(_n_migranti);
+            arma::field<arma::Col<int>> migranti_ricevuti(_n_migranti);
+        
+            // Seleziona individui da migrare (i migliori)
+            for (int j = 0; j < _n_migranti; j++) {
+                migranti_inviare[j] = _pop[j].getroute();  // Assumendo che getroute() restituisca arma::Col<int>
+            }
+        
+            // Determinazione rank vicini
+            int rank_dest = (rank + 1) % size;
+            int rank_src = (rank - 1 + size) % size;
+        
+            // Creazione di richieste non bloccanti
+            MPI_Request send_req, recv_req;
+            arma::Col<int> buffer_invio, buffer_ricezione;
+        
+            // Impacchettamento dati da inviare
+            buffer_invio.set_size(_n_migranti * dim);  // Allocazione esatta
+            for (int k = 0, idx = 0; k < _n_migranti; k++) {
+                const arma::Col<int>& percorso = migranti_inviare[k];
+                for (int j = 0; j < dim; j++, idx++) {
+                    buffer_invio[idx] = percorso[j];
+                }
+            }
+        
+            // Preparazione buffer ricezione
+            buffer_ricezione.set_size(_n_migranti * dim);
+        
+            // Comunicazione non bloccante
+            MPI_Isend(buffer_invio.memptr(), buffer_invio.n_elem, MPI_INT, 
+                      rank_dest, 0, MPI_COMM_WORLD, &send_req);
+            MPI_Irecv(buffer_ricezione.memptr(), buffer_ricezione.n_elem, MPI_INT, 
+                      rank_src, 0, MPI_COMM_WORLD, &recv_req);
+        
+            // Attesa completamento comunicazione
+            MPI_Status status;
+            MPI_Wait(&send_req, &status);
+            MPI_Wait(&recv_req, &status);
+        
+            // Spacchettamento dati ricevuti
+            for (int j = 0; j < _n_migranti; j++) {
+                arma::Col<int> percorso(dim);
+                for (int k = 0; k < dim; k++) {
+                    percorso[k] = buffer_ricezione[j * dim + k];
+                }
+                migranti_ricevuti[j] = percorso;
+            }
+        
+            // Sostituzione dei peggiori individui con i migranti ricevuti
+            for (int j = 0; j < _n_migranti; j++) {
+                int idx = _npop - 1 - j;  // Prendi i peggiori individui
+                _pop[idx].setroute(migranti_ricevuti[j]);
+            }
+        
+            // Riordina la popolazione dopo la migrazione
+            sort_by_length();
+        }
+
         // Calcola la lunghezza media dei migliori N/2 individui
         double sum = 0;
         for (int j = 0; j < _npop/2; j++){
             sum += _pop[j].calculate_length(&dist_matrix);
         }
 
+    
         // Salva su file: generazione, lunghezza del miglior individuo, media dei migliori N/2
         coutf << i << "\t\t" << _pop[0].calculate_length(&dist_matrix) << "\t\t" << sum/(_npop/2) << endl;
+        
     }
     coutf.close();
 
     // Salva il miglior percorso trovato nell'ultima generazione
-    ofstream out("best_route.dat");
+    ofstream out("./simulazioni-eseguite/best_route/best_route_" + to_string(rank) + ".");
     out << "#Best route \t \t x \t \t y" << endl;
     for (int i = 0; i < _pop[0].getdim(); i++){
         out << _pop[0].getroute()[i] << endl;
     }
     out.close();
+    
 }
 

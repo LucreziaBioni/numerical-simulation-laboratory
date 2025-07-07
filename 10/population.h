@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <mpi.h>
 
 using namespace std;
 using namespace arma;
@@ -21,6 +22,8 @@ class Population {
     arma::mat _dist_matrix;
     const double _pcross = 0.90;
     int _ngen;
+    int _n_migranti = 30; // Number of migrants
+    int N_migr = 50; // Number of generations after which migration occurs
 
     public:
     void initialize_pop(int npop, int ngen, arma::mat * dist_matrix);
@@ -31,7 +34,7 @@ class Population {
     Route select();
     arma::field<Route> crossover(Route a, Route b);
     arma::Col<int> sort_by_reference(arma::Col<int> a, arma::Col<int> ref);
-    void evolve( const arma::mat  dist_matrix);
+    void evolve( const arma::mat dist_matrix, int rank , int size); 
     int pbc(int city) const;
 };
 

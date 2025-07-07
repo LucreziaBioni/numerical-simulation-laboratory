@@ -4,72 +4,131 @@
 #include <string>
 #include <cmath>
 #include <cstdlib>
+#include <mpi.h>
 #include "population.h"
 #include "random.h"
 #include "route.h"
 
 using namespace std;
 
-void generate_cities(int choice, int n_cities, arma::mat & dist_matrix);
+void read_cities( int n_cities, arma::mat & dist_matrix);
 
-int main(){
+int main(int argc, char** argv){
 
-    int choice;
+    // Inizializza MPI
+    MPI_Init(&argc, &argv);
 
-    cout << "Insert 0 for cities on a circumference, 1 for cities inside a square: ";
-    cin >> choice;
-    if (choice != 0 && choice != 1) {
-        cout << "Invalid choice. Please enter 0 or 1." << endl;
-        return 1; // Exit the program with an error code
+    int world_size, world_rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
+    int n_cities = 110;
+    arma::mat dist_matrix(n_cities, n_cities);
+    read_cities(n_cities, dist_matrix);
+
+    Population pop;
+    int npop = 2000;
+    int ngen = 3000;
+    pop.initialize_pop(npop, ngen, &dist_matrix);
+
+    if(world_rank == 0) {
+        cout << "Avvio evoluzione parallela con " << world_size << " processi" << endl;
     }
-    
-    int n_cities = 34; // Number of cities
-    arma::mat dist_matrix(n_cities, n_cities); // Distance matrix
-    generate_cities(choice, n_cities, dist_matrix); // Generate cities and distance matrix
 
-    Population pop; // Create a population object
-    int npop = 200; // Number of individuals in the population
-    int ngen = 300; // Number of generations
-    pop.initialize_pop(npop, ngen, &dist_matrix); // Initialize the population
-    pop.evolve(dist_matrix); // Evolve the population
+    pop.evolve(dist_matrix, world_rank, world_size);
 
+    // Salvataggio miglior percorso locale
+    Route local_best = pop.get_percorso(0);
+    double local_best_length = local_best.calculate_length(&dist_matrix);
+    double global_best_length;
+    int best_rank;
 
+    // 1. Raccogli tutte le lunghezze su rank 0
+    double* all_lengths = nullptr;
+    if (world_rank == 0) {
+        all_lengths = new double[world_size];
+    }
+
+    MPI_Gather(&local_best_length, 1, MPI_DOUBLE, all_lengths, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+    // 2. Processo 0 trova il minimo e il rank corrispondente
+    if (world_rank == 0) {
+        global_best_length = all_lengths[0];
+        best_rank = 0;
+        for (int i = 1; i < world_size; i++) {
+            if (all_lengths[i] < global_best_length) {
+                global_best_length = all_lengths[i];
+                best_rank = i;
+            }
+        }
+    }
+
+    // 3. Broadcast dei risultati a tutti i processi
+    MPI_Bcast(&global_best_length, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&best_rank, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    // 4. Comunicazione del miglior percorso
+    if (world_rank == 0) {
+        vector<int> global_best_route(n_cities);
+        
+        if (best_rank == 0) {
+            // Se il miglior percorso è già sul rank 0
+            for (int i = 0; i < n_cities; i++) {
+                global_best_route[i] = local_best.getstop(i);
+            }
+        } else {
+            // Ricevo il miglior percorso dal rank che lo possiede
+            MPI_Recv(global_best_route.data(), n_cities, MPI_INT,
+                    best_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        }
+
+        // Salvo il miglior percorso globale
+        ofstream fout_global("global_best_route.dat");
+        fout_global << "# Miglior percorso globale (lunghezza: " << global_best_length << ")" << endl;
+        for (int city : global_best_route) {
+            fout_global << city << endl;
+        }
+        fout_global.close();
+
+        cout << "Evoluzione completata. Miglior lunghezza trovata: " 
+             << global_best_length << " dal rank " << best_rank << endl;
+    } 
+    else if (world_rank == best_rank) {
+        // Se questo processo ha il miglior percorso, lo invio al rank 0
+        vector<int> best_route(n_cities);
+        for (int i = 0; i < n_cities; i++) {
+            best_route[i] = local_best.getstop(i);
+        }
+        MPI_Send(best_route.data(), n_cities, MPI_INT, 0, 0, MPI_COMM_WORLD);
+    }
+
+    // 5. Pulizia memoria
+    if (world_rank == 0) {
+        delete[] all_lengths;
+    }
+
+    MPI_Finalize();
     return 0;
 }
 
-void generate_cities(int choice, int n_cities, arma::mat & dist_matrix) {
-    ofstream outc("cities.dat");
-    outc << "# \t \t x \t \t y" << endl;
 
-    Random rnd_city;
-    int p1, p2; 
-    ifstream Primes("Primes");
-    Primes >> p1 >> p2 ;
-    Primes.close();
-    int seed[4]; // Read the seed of the RNG
-    ifstream Seed("seed.in");
-    Seed >> seed[0] >> seed[1] >> seed[2] >> seed[3];
-    rnd_city.SetRandom(seed,p1,p2);
-
+// Legge coordinate delle città e calcola la matrice delle distanze
+void read_cities( int n_cities, arma::mat & dist_matrix) {
+    
     vec x(n_cities);
     vec y(n_cities);
 
-    if (choice == 0) {
-        // Generate cities on a circumference
-        for (int i = 0; i < n_cities; i++) {
-            double theta = rnd_city.Rannyu(0, 2 * M_PI);
-            x[i] =  cos(theta);
-            y[i] =  sin(theta);
-            outc << i+1 << "\t\t" << x[i] << "\t\t" << y[i] << endl;
-        }
-    } else if (choice == 1) {
-        // Generate cities inside a square
-        for (int i = 0; i < n_cities; i++) {
-            x[i] = rnd_city.Rannyu(-1.0, 1.0); // Random x coordinate in [-1, 1]
-            y[i] = rnd_city.Rannyu(-1.0, 1.0); // Random y coordinate in [-1, 1]
-            outc << i+1 << "\t\t" << x[i] << "\t\t" << y[i] << endl;
-        }
+    ifstream province("cap_prov_ita.dat"); // Apre il file con le coordinate delle città
+    if (!province) {
+        cerr << "Error: could not open cap_prov_ita.dat" << endl;
+        exit(1); 
     }
+
+    // Legge coordinate x e y delle città dal file
+    for (int i = 0; i < n_cities; i++) {
+        province >> x[i] >> y[i];
+    }
+    province.close();
 
     // Calculate the distance matrix
     for(int i = 0; i < n_cities; i++) {

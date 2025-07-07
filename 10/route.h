@@ -13,7 +13,7 @@ using namespace arma;
 class Route {
 
 private:
-  int _ndim = 34; // Dimensionality of the system
+  int _ndim = 110; // Dimensionality of the system
   arma::Col<int> _route; // Route vector
   double _length; // Length of the route
   Random* _point_rnd;

@@ -168,11 +168,11 @@ arma::Col<int> Population :: sort_by_reference(arma::Col<int> a, arma::Col<int> 
     return arma::Col<int>(sorted); // riconverto vector in vettore di armadillo
 }
 
-// FRunzione di evoluzione della popolazione
+// Funzione di evoluzione della popolazione
 void Population::evolve( const arma::mat dist_matrix) {
 
     ofstream coutf("results.dat");
-    coutf << "#" << "\t\t L2 \t\t <L2>" << endl;
+    coutf << "#" << "\t\t L1 \t\t <L1>" << endl;
 
     sort_by_length(); // Ordina la popolazione iniziale in base alla lunghezza del percorso
 
