@@ -21,12 +21,21 @@ void Population::initialize_pop(int npop, int ngen, arma::mat *dist_matrix) {
 
     int seed[4]; // Array per i 4 interi che rappresentano il seed del RNG
 
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank); // Get current MPI process rank
+    
     // Legge il seed dal file "seed.in"
     ifstream Seed("seed.in");
     Seed >> seed[0] >> seed[1] >> seed[2] >> seed[3];
+    Seed.close();
+
+    //  Inizializza il generatore di numeri casuali con il seed e i numeri primi, rendendolo unico per ogni processo MPI
+    for (int i = 0; i < 4; i++) {
+        seed[i] += rank * 3; // scelta arbitraria per rendere il seed unico per ogni processo
+    }
 
     // Inizializza il generatore di numeri casuali con il seed e i numeri primi
-    _rnd.SetRandom(seed, p1, p2);
+    _rnd.SetRandom(seed, p1 + rank, p2 + rank);
 
     // Copia il contenuto della matrice delle distanze passata come argomento nel membro interno della classe
     _dist_matrix = *dist_matrix;
@@ -79,12 +88,12 @@ Route Population::select() {
     return _pop(j);
 }
 
-// restituisce la dimensione della popolazione
+// Restituisce la dimensione della popolazione
 int Population::size() const {
     return _pop.size(); // Return the size of the population
 }
 
-// funzione per il pbc (periodic boundary condition) che restituisce l'indice corretto
+// Funzione per il pbc (periodic boundary condition) che restituisce l'indice corretto
 int Population :: pbc(int city) const{
     int ndim = 110; // Dimensione del percorso (numero di città)
     if(city >= ndim){
@@ -93,7 +102,7 @@ int Population :: pbc(int city) const{
     return city;
 }
 
-// operatore di crossover tra due percorsi a e b
+// Operatore di crossover tra due percorsi a e b
 arma::field<Route> Population :: crossover(Route a, Route b){
     if (_rnd.Rannyu()<_pcross){
         arma::field<Route> figli(2);
@@ -153,7 +162,7 @@ arma::field<Route> Population :: crossover(Route a, Route b){
     }
 }
 
-// ordina il vettore a in base alla posizione degli elementi in ref
+// Ordina il vettore a in base alla posizione degli elementi in ref
 arma::Col<int> Population :: sort_by_reference(arma::Col<int> a, arma::Col<int> ref){
     arma::Col<int> ref_pos(ref.size()); 
     for(int i = 0; i < ref.size(); i++){
@@ -174,7 +183,6 @@ void Population::evolve( const arma::mat dist_matrix, int rank , int size) {
    
     ofstream coutf("./simulazioni-eseguite/results/results_" + to_string(rank) + ".dat");
     coutf << "#" << "\t\t L1 \t\t <L1>" << endl;
-
 
     sort_by_length(); // Ordina la popolazione iniziale in base alla lunghezza del percorso
 

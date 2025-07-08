@@ -94,11 +94,11 @@ void Route :: initialize(  arma::mat * distance_matrix , Random &rnd ){
         this->swap(j,k);
     }
 
-    std::ifstream infile("cities.dat");
-    if (!infile.is_open()) {
-        std::cerr << "Errore: impossibile aprire il file cities.dat" << std::endl;
-        exit(1);
-    }
+    //std::ifstream infile("cities.dat");
+    //if (!infile.is_open()) {
+    //    std::cerr << "Errore: impossibile aprire il file cities.dat" << std::endl;
+    //    exit(1);
+    //}
     
     _length = this->calculate_length(distance_matrix);
 
